@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Task1</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>User List</h2>
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">USER LIST</a></li>
+            <li><a data-toggle="tab" href="#menu1">USER DETAILS</a></li>
+
+        </ul>
+
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Firstname</th>
+                            <th>Lastname</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="app">
+
+                    </tbody>
+                </table>
+            </div>
+            <div id="menu1" class="tab-pane fade">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Firstname</th>
+                            <th>Lastname</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="app1">
+
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+        <style>
+            
+            #app1 tr td:first-child img {
+                border-radius: 50%;
+                width: 50px;
+            }
+            #app tr td:first-child img {
+                border-radius: 50%;
+                width: 50px;
+            }
+            #ss{
+                display: none;
+            }
+        </style>
+
+
+        <script>
+            const fetchUsers = fetch('https://reqres.in/api/users');
+
+            const fetchUser2 = fetch('https://reqres.in/api/users/2');
+
+
+            Promise.all([fetchUsers, fetchUser2]).then(values => {
+                return Promise.all(values.map(r => r.json()));
+            }).then(([users1 , users2]) => {
+
+                console.log(users1);
+                
+                 const userlist = users1.data
+                    .map(user  => {
+
+                        return ` 
+
+                                       <tr id="${user.id}">
+                                        <td><img src="${user.avatar}"></td>
+                                        <td>${user.first_name}</td>
+                                        <td>${user.last_name}</td>
+                                        <td>${user.email}</td>
+
+                                      </tr>
+                        `
+                    })
+                    .join("");
+                
+                document.querySelector("#app").insertAdjacentHTML("afterbegin", userlist);
+                 document.querySelector("#app1").innerHTML = `
+
+
+                                        <tr id="${users2.data.id}">
+                                        <td><img src="${users2.data.avatar}"></td>
+                                        <td>${users2.data.first_name}</td>
+                                        <td>${users2.data.last_name}</td>
+                                        <td> ${users2.data.email}</td>
+
+                                      </tr>
+
+
+                                    ` ;
+
+                console.log(users2);
+            }).catch(error => {
+                console.log(error);
+            });
+        </script>
+
+
+</body>
+
+</html>
